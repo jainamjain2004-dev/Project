@@ -1,0 +1,1315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VERITAS — Professional Reputation Layer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#07070a;
+  --s1:#101015;
+  --s2:#17171e;
+  --s3:#1f1f28;
+  --s4:#27272f;
+  --bd:#2c2c3a;
+  --bdl:#3a3a4a;
+  --tx:#ecead4;
+  --tx2:#8a8a9e;
+  --tx3:#52525e;
+  --gold:#c9a352;
+  --goldd:#8a6e2e;
+  --goldbg:rgba(201,163,82,.09);
+  --goldbg2:rgba(201,163,82,.15);
+  --grn:#4b9e72;
+  --grnbg:rgba(75,158,114,.1);
+  --red:#c25a5a;
+  --redbg:rgba(194,90,90,.1);
+  --blu:#4a7fc1;
+  --blubg:rgba(74,127,193,.1);
+  --fd:'Playfair Display',Georgia,serif;
+  --fb:'IBM Plex Sans',system-ui,sans-serif;
+  --fm:'IBM Plex Mono','Courier New',monospace;
+  --r8:8px;--r12:12px;--r16:16px;
+}
+html{background:var(--bg);color:var(--tx);font-family:var(--fb);font-size:14px;line-height:1.6;min-height:100vh}
+body{background:var(--bg);min-height:100vh}
+button{font-family:var(--fb);cursor:pointer}
+input,textarea,select{font-family:var(--fb)}
+::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:var(--s1)}::-webkit-scrollbar-thumb{background:var(--bd);border-radius:3px}
+
+/* ── NAV ── */
+#nav{
+  position:sticky;top:0;z-index:200;
+  display:flex;align-items:center;gap:4px;
+  height:56px;padding:0 28px;
+  background:rgba(16,16,21,.92);border-bottom:1px solid var(--bd);
+  backdrop-filter:blur(16px);
+}
+.nav-logo{
+  font-family:var(--fd);font-size:18px;font-weight:700;
+  color:var(--gold);letter-spacing:.1em;margin-right:32px;flex-shrink:0;
+  display:flex;flex-direction:column;line-height:1;cursor:pointer;
+}
+.nav-logo small{font-family:var(--fb);font-size:9px;color:var(--tx3);letter-spacing:.18em;text-transform:uppercase;font-weight:400;margin-top:3px}
+.nav-tab{
+  padding:6px 14px;border-radius:var(--r8);background:none;
+  border:none;color:var(--tx2);font-size:12.5px;font-weight:500;
+  transition:all .18s;letter-spacing:.01em;white-space:nowrap;
+}
+.nav-tab:hover{color:var(--tx);background:var(--s2)}
+.nav-tab.active{color:var(--gold);background:var(--goldbg)}
+.nav-sep{flex:1}
+.nav-badge{
+  display:flex;align-items:center;gap:8px;
+  font-size:11px;color:var(--tx3);margin-right:12px;
+}
+.badge-dot{width:6px;height:6px;border-radius:50%;background:var(--grn);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(75,158,114,.4)}50%{box-shadow:0 0 0 4px rgba(75,158,114,0)}}
+.btn-signin{
+  padding:6px 16px;background:none;border:1px solid var(--bd);
+  color:var(--tx2);border-radius:var(--r8);font-size:12px;
+  font-weight:500;transition:all .18s;
+}
+.btn-signin:hover{border-color:var(--gold);color:var(--gold)}
+
+/* ── SCREENS ── */
+.screen{display:none;padding:36px 28px;max-width:1180px;margin:0 auto;animation:fadeUp .3s ease}
+.screen.active{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── DISCOVER ── */
+.discover-top{margin-bottom:26px}
+.discover-top h1{font-family:var(--fd);font-size:26px;font-weight:700;margin-bottom:5px}
+.discover-top p{color:var(--tx2);font-size:13px}
+.search-wrap{
+  display:flex;align-items:center;gap:10px;
+  background:var(--s1);border:1px solid var(--bd);border-radius:var(--r12);
+  padding:9px 14px;margin-bottom:18px;transition:border .18s;
+}
+.search-wrap:focus-within{border-color:var(--goldd)}
+.search-ic{color:var(--tx3);font-size:15px;flex-shrink:0}
+.search-wrap input{flex:1;background:none;border:none;outline:none;color:var(--tx);font-size:13px}
+.search-wrap input::placeholder{color:var(--tx3)}
+.filter-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:26px}
+.chip{
+  padding:4px 13px;border-radius:20px;background:none;
+  border:1px solid var(--bd);color:var(--tx2);font-size:11px;font-weight:500;
+  cursor:pointer;transition:all .15s;letter-spacing:.02em;
+}
+.chip:hover{border-color:var(--bdl);color:var(--tx)}
+.chip.active{border-color:var(--gold);color:var(--gold);background:var(--goldbg)}
+.fsep{width:1px;height:18px;background:var(--bd)}
+.sort-sel{
+  margin-left:auto;background:var(--s2);border:1px solid var(--bd);
+  color:var(--tx2);padding:5px 10px;border-radius:var(--r8);
+  font-size:11px;cursor:pointer;outline:none;
+}
+.profiles-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(275px,1fr));gap:14px}
+.no-results{text-align:center;padding:52px 0;color:var(--tx3);font-size:13px}
+.no-results span{display:block;font-size:28px;margin-bottom:10px}
+
+/* ── PROFILE CARD ── */
+.p-card{
+  background:var(--s1);border:1px solid var(--bd);border-radius:var(--r12);
+  padding:20px;cursor:pointer;transition:all .2s;position:relative;overflow:hidden;
+}
+.p-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--goldd),var(--gold),transparent);
+  opacity:0;transition:opacity .2s;
+}
+.p-card:hover{border-color:var(--bdl);transform:translateY(-2px);box-shadow:0 10px 36px rgba(0,0,0,.45)}
+.p-card:hover::before{opacity:1}
+.ch{display:flex;align-items:flex-start;gap:12px;margin-bottom:14px}
+.avi{
+  width:44px;height:44px;border-radius:10px;flex-shrink:0;
+  background:var(--s3);border:1px solid var(--bd);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--fd);font-size:15px;font-weight:600;color:var(--gold);
+  position:relative;overflow:hidden;
+}
+.avi-img{width:100%;height:100%;object-fit:cover;border-radius:9px}
+.avail-dot{
+  position:absolute;bottom:2px;right:2px;
+  width:8px;height:8px;border-radius:50%;
+  border:1.5px solid var(--s1);
+}
+.avail-dot.open{background:var(--grn)}
+.avail-dot.closed{background:var(--tx3)}
+.ci{flex:1;min-width:0}
+.cn{font-size:14px;font-weight:600;margin-bottom:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cr{font-size:11px;color:var(--tx2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cc{font-size:11px;color:var(--tx3);margin-top:1px}
+.cs{font-family:var(--fm);font-size:22px;font-weight:500;color:var(--gold);line-height:1;flex-shrink:0;text-align:right}
+.cs small{font-size:10px;color:var(--tx3);display:block;text-align:right;margin-top:2px}
+.ctags{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:12px}
+.ctag{padding:2px 7px;background:var(--s2);border:1px solid var(--bd);border-radius:4px;font-size:9px;color:var(--tx3);letter-spacing:.04em}
+.cbars{display:flex;flex-direction:column;gap:5px;margin-bottom:14px}
+.cbar-row{display:flex;align-items:center;gap:7px}
+.cbar-lbl{font-size:9px;color:var(--tx3);width:68px;flex-shrink:0;text-transform:uppercase;letter-spacing:.05em}
+.cbar-track{flex:1;height:3px;background:var(--s4);border-radius:2px;overflow:hidden;position:relative}
+.cbar-fill{height:100%;border-radius:2px;background:var(--gold);width:0;transition:width 1s cubic-bezier(.4,0,.2,1)}
+.cf{display:flex;align-items:center;justify-content:space-between}
+.cf-ct{font-size:11px;color:var(--tx3)}
+.cf-ct strong{color:var(--tx2)}
+.btn-view{
+  padding:5px 13px;background:var(--goldbg);border:1px solid var(--goldd);
+  color:var(--gold);border-radius:6px;font-size:11px;font-weight:500;
+  transition:all .15s;
+}
+.btn-view:hover{background:var(--goldbg2)}
+
+/* ── PROFILE SCREEN ── */
+.btn-back{
+  display:inline-flex;align-items:center;gap:6px;
+  background:none;border:none;color:var(--tx2);font-size:12px;
+  margin-bottom:26px;transition:color .15s;padding:0;
+}
+.btn-back:hover{color:var(--gold)}
+.ph{display:grid;grid-template-columns:1fr auto;gap:28px;margin-bottom:38px;align-items:start}
+@media(max-width:680px){.ph{grid-template-columns:1fr}}
+.ph-av{
+  width:68px;height:68px;border-radius:14px;
+  background:var(--s2);border:1px solid var(--bd);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--fd);font-size:26px;font-weight:600;color:var(--gold);
+  margin-bottom:14px;overflow:hidden;
+}
+.ph-av img{width:100%;height:100%;object-fit:cover}
+.ph-name{font-family:var(--fd);font-size:30px;font-weight:700;margin-bottom:8px;line-height:1.1}
+.ph-meta{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.ph-meta-item{font-size:12px;color:var(--tx2)}
+.ph-meta-item strong{color:var(--tx)}
+.ph-dot{width:3px;height:3px;background:var(--bdl);border-radius:50%}
+.ph-tags{display:flex;gap:7px;flex-wrap:wrap}
+.ph-tag{padding:3px 10px;background:var(--s2);border:1px solid var(--bd);border-radius:20px;font-size:11px;color:var(--tx2)}
+.avail-badge{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:3px 10px;border-radius:20px;font-size:10px;font-weight:500;
+}
+.avail-badge.open{background:var(--grnbg);border:1px solid var(--grn);color:var(--grn)}
+.avail-badge.closed{background:var(--s2);border:1px solid var(--bd);color:var(--tx3)}
+.avail-badge-dot{width:5px;height:5px;border-radius:50%;background:currentColor}
+.score-card{
+  background:var(--s1);border:1px solid var(--bd);border-radius:var(--r16);
+  padding:24px 28px;text-align:center;min-width:190px;
+}
+.sc-lbl{font-size:9px;color:var(--tx3);text-transform:uppercase;letter-spacing:.14em;margin-bottom:10px}
+.sc-big{font-family:var(--fm);font-size:52px;font-weight:500;color:var(--gold);line-height:1}
+.sc-denom{font-family:var(--fm);font-size:20px;color:var(--tx3)}
+.sc-sub{font-size:11px;color:var(--tx2);margin-top:8px}
+.sc-badge{
+  display:inline-block;padding:3px 10px;
+  background:var(--grnbg);border:1px solid var(--grn);
+  color:var(--grn);border-radius:20px;font-size:10px;margin-top:10px;
+}
+.sc-trend{margin-top:14px}
+.sc-trend-lbl{font-size:9px;color:var(--tx3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px}
+.sparkline{width:100%;height:32px}
+.sec-title{
+  font-size:9px;color:var(--tx3);text-transform:uppercase;letter-spacing:.14em;
+  margin-bottom:18px;display:flex;align-items:center;gap:10px;
+}
+.sec-title::after{content:'';flex:1;height:1px;background:var(--bd)}
+.dims{display:flex;flex-direction:column;gap:14px;margin-bottom:36px}
+.dim-row{display:grid;grid-template-columns:160px 1fr 40px;align-items:center;gap:14px;position:relative}
+@media(max-width:600px){.dim-row{grid-template-columns:100px 1fr 36px}}
+.dim-lbl{font-size:12px;color:var(--tx2)}
+.dim-track{height:5px;background:var(--s3);border-radius:3px;overflow:visible;position:relative}
+.dim-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--goldd),var(--gold));width:0;transition:width 1.1s cubic-bezier(.4,0,.2,1)}
+.dim-avg-marker{
+  position:absolute;top:-3px;width:2px;height:11px;
+  background:var(--tx3);border-radius:1px;
+  transform:translateX(-50%);
+}
+.dim-avg-marker::after{
+  content:'avg';position:absolute;top:-14px;left:50%;transform:translateX(-50%);
+  font-size:8px;color:var(--tx3);white-space:nowrap;font-family:var(--fm);
+}
+.dim-sc{font-family:var(--fm);font-size:13px;color:var(--gold);font-weight:500;text-align:right}
+.rater-grid{display:flex;gap:12px;margin-bottom:36px;flex-wrap:wrap}
+.rater-c{
+  flex:1;min-width:100px;background:var(--s1);border:1px solid var(--bd);
+  border-radius:10px;padding:14px;text-align:center;
+}
+.rc-type{font-size:9px;color:var(--tx3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:5px}
+.rc-n{font-family:var(--fm);font-size:26px;font-weight:500;line-height:1}
+.rc-avg{font-size:10px;color:var(--tx2);margin-top:4px}
+.testy{display:flex;flex-direction:column;gap:10px;margin-bottom:36px}
+.testy-item{
+  background:var(--s1);border:1px solid var(--bd);border-radius:10px;
+  padding:16px;display:flex;gap:12px;
+}
+.tq{font-family:var(--fd);font-size:28px;color:var(--bd);line-height:.8;flex-shrink:0}
+.ttext{font-size:12px;color:var(--tx2);line-height:1.75;flex:1}
+.tmeta{font-size:10px;color:var(--tx3);margin-top:6px}
+.profile-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:36px}
+.btn-rate-cta{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:11px 24px;background:var(--gold);color:#000;
+  border:none;border-radius:var(--r8);font-weight:600;font-size:13px;
+  transition:all .2s;
+}
+.btn-rate-cta:hover{background:#d4ae60;transform:translateY(-1px)}
+.btn-share{
+  display:inline-flex;align-items:center;gap:7px;
+  padding:11px 18px;background:none;color:var(--tx2);
+  border:1px solid var(--bd);border-radius:var(--r8);font-size:12px;
+  transition:all .18s;
+}
+.btn-share:hover{border-color:var(--bdl);color:var(--tx)}
+.share-toast{
+  position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);
+  background:var(--s2);border:1px solid var(--grn);color:var(--grn);
+  padding:10px 20px;border-radius:var(--r8);font-size:12px;
+  opacity:0;transition:all .3s;z-index:500;pointer-events:none;
+}
+.share-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ── RATE SCREEN ── */
+.rate-wrap{max-width:580px;margin:0 auto}
+.rate-hdr{margin-bottom:28px}
+.rate-hdr h1{font-family:var(--fd);font-size:26px;font-weight:700;margin-bottom:6px}
+.rate-hdr p{color:var(--tx2);font-size:13px}
+.step-ind{display:flex;align-items:center;gap:6px;margin-bottom:32px}
+.step-d{width:7px;height:7px;border-radius:50%;background:var(--s4);transition:all .3s}
+.step-d.cur{background:var(--gold);transform:scale(1.4)}
+.step-d.done{background:var(--grn)}
+.step-ln{flex:1;height:1px;background:var(--bd)}
+.form-card{background:var(--s1);border:1px solid var(--bd);border-radius:var(--r12);padding:26px}
+.flbl{
+  display:block;font-size:10px;color:var(--tx2);
+  text-transform:uppercase;letter-spacing:.09em;margin-bottom:9px;
+}
+.finp{
+  width:100%;background:var(--s2);border:1px solid var(--bd);
+  border-radius:var(--r8);padding:10px 13px;color:var(--tx);
+  font-size:13px;outline:none;transition:border .15s;
+}
+.finp:focus{border-color:var(--goldd)}
+.suggest-box{
+  margin-top:10px;background:var(--s2);border:1px solid var(--bd);
+  border-radius:var(--r8);overflow:hidden;
+}
+.sug-head{font-size:10px;color:var(--tx3);padding:8px 12px;letter-spacing:.05em}
+.sug-item{
+  padding:9px 12px;border-top:1px solid var(--bd);
+  font-size:12px;color:var(--tx2);cursor:pointer;
+  display:flex;align-items:center;gap:8px;transition:background .15s;
+}
+.sug-item:hover{background:var(--s3);color:var(--tx)}
+.sug-dot{width:4px;height:4px;background:var(--gold);border-radius:50%;flex-shrink:0}
+.rel-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.rel-opt{
+  padding:16px;background:var(--s2);border:1px solid var(--bd);
+  border-radius:10px;cursor:pointer;text-align:center;transition:all .15s;
+}
+.rel-opt:hover{border-color:var(--bdl)}
+.rel-opt.sel{border-color:var(--gold);background:var(--goldbg)}
+.rel-ic{font-size:22px;margin-bottom:6px}
+.rel-lbl{font-size:11px;color:var(--tx2)}
+.rel-opt.sel .rel-lbl{color:var(--gold)}
+.rdims{display:flex;flex-direction:column;gap:18px}
+.rdim-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px}
+.rdim-lbl{font-size:12px;font-weight:500}
+.rdim-desc{font-size:10px;color:var(--tx3);margin-bottom:9px}
+.rdim-sc{font-family:var(--fm);font-size:12px;color:var(--gold)}
+.stars{display:flex;gap:6px}
+.star{
+  width:38px;height:38px;border-radius:var(--r8);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  background:var(--s3);border:1px solid var(--bd);
+  font-family:var(--fm);font-size:13px;color:var(--tx2);font-weight:500;
+  transition:all .15s;user-select:none;
+}
+.star:hover{background:var(--goldbg);border-color:var(--goldd);color:var(--gold)}
+.star.sel{background:var(--goldbg);border-color:var(--gold);color:var(--gold)}
+.ftarea{
+  width:100%;background:var(--s2);border:1px solid var(--bd);
+  border-radius:var(--r8);padding:11px 13px;color:var(--tx);
+  font-size:13px;outline:none;resize:vertical;min-height:96px;
+  transition:border .15s;
+}
+.ftarea:focus{border-color:var(--goldd)}
+.char-count{font-size:10px;color:var(--tx3);text-align:right;margin-top:5px}
+.disclaimer{
+  margin-top:14px;padding:12px 14px;background:var(--s2);
+  border:1px solid var(--bd);border-radius:var(--r8);
+}
+.disc-item{font-size:11px;color:var(--tx3);line-height:1.9;display:flex;gap:7px}
+.disc-ic{color:var(--goldd);flex-shrink:0}
+.factions{display:flex;justify-content:space-between;align-items:center;margin-top:22px}
+.btn-p{
+  padding:10px 22px;background:var(--gold);color:#000;
+  border:none;border-radius:var(--r8);font-weight:600;font-size:13px;
+  transition:all .2s;
+}
+.btn-p:hover{background:#d4ae60}
+.btn-p:disabled{opacity:.35;cursor:not-allowed;transform:none}
+.btn-s{
+  padding:10px 18px;background:none;color:var(--tx2);
+  border:1px solid var(--bd);border-radius:var(--r8);font-size:13px;
+  transition:all .15s;
+}
+.btn-s:hover{border-color:var(--bdl);color:var(--tx)}
+.success-scr{text-align:center;padding:52px 0}
+.succ-ic{
+  width:60px;height:60px;border-radius:50%;background:var(--grnbg);
+  border:1px solid var(--grn);display:flex;align-items:center;justify-content:center;
+  margin:0 auto 20px;font-size:22px;color:var(--grn);
+}
+.success-scr h2{font-family:var(--fd);font-size:26px;margin-bottom:8px}
+.success-scr p{color:var(--tx2);font-size:13px;margin-bottom:28px;line-height:1.8}
+
+/* ── HOW IT WORKS ── */
+.how-hdr{margin-bottom:8px}
+.how-hdr h1{font-family:var(--fd);font-size:26px;font-weight:700;margin-bottom:6px}
+.how-hdr p{color:var(--tx2);font-size:13px}
+.how-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:28px}
+@media(max-width:640px){.how-grid{grid-template-columns:1fr}}
+.how-card{background:var(--s1);border:1px solid var(--bd);border-radius:var(--r12);padding:26px}
+.how-n{font-family:var(--fm);font-size:38px;color:var(--bd);font-weight:500;line-height:1;margin-bottom:14px}
+.how-card h3{font-family:var(--fd);font-size:19px;margin-bottom:9px}
+.how-card p{color:var(--tx2);font-size:12px;line-height:1.85}
+.params{margin-top:14px;display:flex;flex-direction:column;gap:7px}
+.param{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--tx2)}
+.pdot{width:4px;height:4px;background:var(--gold);border-radius:50%;flex-shrink:0}
+.how-ai{
+  margin-top:16px;background:var(--s2);border:1px solid var(--bd);
+  border-radius:var(--r8);padding:12px 14px;
+}
+.ai-label{font-size:10px;color:var(--tx3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px}
+.ai-item{font-size:11px;color:var(--tx2);line-height:1.85;display:flex;gap:6px}
+.ai-ic{color:var(--gold)}
+.how-stat-row{display:flex;gap:12px;margin-top:28px}
+.how-stat{
+  flex:1;background:var(--s1);border:1px solid var(--bd);border-radius:10px;
+  padding:16px;text-align:center;
+}
+.hs-n{font-family:var(--fm);font-size:30px;color:var(--gold);font-weight:500;line-height:1;margin-bottom:4px}
+.hs-l{font-size:11px;color:var(--tx2)}
+
+/* ── FAQ ── */
+.faq-section{margin-top:40px;max-width:760px}
+.faq-section h2{font-family:var(--fd);font-size:22px;font-weight:600;margin-bottom:20px}
+.faq-item{border:1px solid var(--bd);border-radius:var(--r12);margin-bottom:8px;overflow:hidden;transition:border .2s}
+.faq-item.open{border-color:var(--goldd)}
+.faq-q{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:16px 18px;cursor:pointer;transition:background .15s;
+}
+.faq-q:hover{background:var(--s2)}
+.faq-q-text{font-size:13px;font-weight:500}
+.faq-arrow{color:var(--tx3);transition:transform .25s;font-size:12px}
+.faq-item.open .faq-arrow{transform:rotate(180deg);color:var(--gold)}
+.faq-a{
+  max-height:0;overflow:hidden;transition:max-height .3s ease,padding .3s ease;
+  font-size:12px;color:var(--tx2);line-height:1.85;
+}
+.faq-item.open .faq-a{max-height:200px;padding:0 18px 16px}
+
+/* ── HERO / LANDING ── */
+.hero{
+  text-align:center;padding:72px 28px 52px;max-width:780px;margin:0 auto;
+}
+.hero-eyebrow{
+  display:inline-flex;align-items:center;gap:7px;
+  padding:5px 14px;background:var(--goldbg);border:1px solid var(--goldd);
+  border-radius:20px;font-size:10px;color:var(--gold);letter-spacing:.1em;
+  text-transform:uppercase;margin-bottom:24px;
+}
+.hero h1{
+  font-family:var(--fd);font-size:52px;font-weight:700;line-height:1.12;
+  margin-bottom:18px;letter-spacing:-.01em;
+}
+.hero h1 em{color:var(--gold);font-style:normal}
+.hero p{font-size:15px;color:var(--tx2);margin-bottom:32px;line-height:1.75;max-width:520px;margin-left:auto;margin-right:auto}
+.hero-ctas{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.btn-hero{
+  padding:13px 28px;background:var(--gold);color:#000;border:none;
+  border-radius:var(--r8);font-weight:600;font-size:14px;transition:all .2s;
+}
+.btn-hero:hover{background:#d4ae60;transform:translateY(-1px)}
+.btn-hero-o{
+  padding:13px 28px;background:none;color:var(--tx2);border:1px solid var(--bd);
+  border-radius:var(--r8);font-size:14px;font-weight:500;transition:all .18s;
+}
+.btn-hero-o:hover{border-color:var(--gold);color:var(--gold)}
+.trust-line{display:flex;align-items:center;justify-content:center;gap:10px;margin-top:28px;flex-wrap:wrap}
+.tl-item{font-size:11px;color:var(--tx3);display:flex;align-items:center;gap:5px}
+.tl-sep{width:3px;height:3px;background:var(--bdl);border-radius:50%}
+
+/* ── WAITLIST ── */
+.waitlist-section{
+  max-width:560px;margin:0 auto 56px;padding:32px;
+  background:var(--s1);border:1px solid var(--bd);border-radius:var(--r16);
+  text-align:center;
+}
+.waitlist-section h2{font-family:var(--fd);font-size:22px;margin-bottom:8px}
+.waitlist-section p{color:var(--tx2);font-size:13px;margin-bottom:20px;line-height:1.7}
+.waitlist-row{display:flex;gap:8px}
+.waitlist-inp{
+  flex:1;background:var(--s2);border:1px solid var(--bd);
+  border-radius:var(--r8);padding:10px 14px;color:var(--tx);
+  font-size:13px;outline:none;transition:border .15s;
+}
+.waitlist-inp:focus{border-color:var(--goldd)}
+.waitlist-count{font-size:11px;color:var(--tx3);margin-top:12px}
+.waitlist-count strong{color:var(--gold)}
+
+/* ── ABOUT ── */
+.about-hero{
+  max-width:680px;margin:0 auto 48px;text-align:center;padding-top:12px;
+}
+.about-hero h1{font-family:var(--fd);font-size:36px;font-weight:700;margin-bottom:14px;line-height:1.15}
+.about-hero p{color:var(--tx2);font-size:14px;line-height:1.85}
+.about-mission{
+  max-width:760px;margin:0 auto 48px;padding:28px 32px;
+  background:var(--s1);border:1px solid var(--bd);border-radius:var(--r16);
+  position:relative;overflow:hidden;
+}
+.about-mission::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--goldd),var(--gold),transparent);
+}
+.am-label{font-size:9px;color:var(--tx3);text-transform:uppercase;letter-spacing:.16em;margin-bottom:14px}
+.am-text{font-family:var(--fd);font-size:20px;color:var(--tx);line-height:1.75;font-style:italic}
+.am-text em{color:var(--gold);font-style:normal}
+.about-founders{max-width:860px;margin:0 auto 48px}
+.af-title{font-family:var(--fd);font-size:22px;font-weight:600;margin-bottom:24px}
+.founders-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+@media(max-width:640px){.founders-grid{grid-template-columns:1fr}}
+.founder-card{
+  background:var(--s1);border:1px solid var(--bd);border-radius:var(--r16);
+  overflow:hidden;transition:all .2s;
+}
+.founder-card:hover{border-color:var(--bdl);box-shadow:0 12px 40px rgba(0,0,0,.4)}
+.fc-top{
+  padding:28px 28px 0;
+  background:linear-gradient(160deg,var(--s2) 0%,var(--s1) 100%);
+  position:relative;
+}
+.fc-top::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--bd),transparent);
+}
+.fc-avatar-wrap{position:relative;display:inline-block;margin-bottom:20px}
+.fc-avatar{
+  width:88px;height:88px;border-radius:18px;
+  border:2px solid var(--bd);display:flex;align-items:center;justify-content:center;
+  font-family:var(--fd);font-size:28px;font-weight:700;color:var(--gold);
+  overflow:hidden;position:relative;
+}
+.fc-avatar-jj{background:linear-gradient(135deg,#1a1510 0%,#2a1e08 50%,#1a1510 100%)}
+.fc-avatar-km{background:linear-gradient(135deg,#0d1520 0%,#0f1f30 50%,#0d1520 100%)}
+/* Jainam avatar – gold tone */
+.fc-avatar-jj svg{position:absolute;inset:0;width:100%;height:100%}
+/* Keon avatar – blue tone */
+.fc-avatar-km svg{position:absolute;inset:0;width:100%;height:100%}
+.fc-founder-tag{
+  position:absolute;bottom:-10px;left:50%;transform:translateX(-50%);
+  white-space:nowrap;padding:3px 10px;
+  background:var(--goldbg);border:1px solid var(--goldd);
+  border-radius:20px;font-size:9px;color:var(--gold);letter-spacing:.1em;text-transform:uppercase;
+}
+.fc-body{padding:28px}
+.fc-name{font-family:var(--fd);font-size:22px;font-weight:700;margin-bottom:5px}
+.fc-role{font-size:12px;color:var(--gold);font-weight:500;margin-bottom:14px;letter-spacing:.03em}
+.fc-bio{font-size:12px;color:var(--tx2);line-height:1.85;margin-bottom:18px}
+.fc-pills{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:18px}
+.fc-pill{
+  padding:3px 10px;background:var(--s2);border:1px solid var(--bd);
+  border-radius:20px;font-size:10px;color:var(--tx3);
+}
+.fc-links{display:flex;gap:8px}
+.fc-link{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:6px 14px;border:1px solid var(--bd);border-radius:var(--r8);
+  font-size:11px;color:var(--tx2);text-decoration:none;
+  background:none;cursor:pointer;transition:all .15s;
+}
+.fc-link:hover{border-color:var(--goldd);color:var(--gold)}
+.about-values{max-width:860px;margin:0 auto 48px}
+.av-title{font-family:var(--fd);font-size:22px;font-weight:600;margin-bottom:20px}
+.values-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+@media(max-width:640px){.values-grid{grid-template-columns:1fr}}
+.value-card{
+  background:var(--s1);border:1px solid var(--bd);border-radius:var(--r12);
+  padding:22px;
+}
+.vc-icon{font-size:24px;margin-bottom:12px}
+.vc-title{font-family:var(--fd);font-size:16px;font-weight:600;margin-bottom:7px}
+.vc-text{font-size:12px;color:var(--tx2);line-height:1.8}
+.about-contact{
+  max-width:540px;margin:0 auto;text-align:center;
+  padding:32px;background:var(--s1);border:1px solid var(--bd);border-radius:var(--r16);
+}
+.about-contact h2{font-family:var(--fd);font-size:20px;margin-bottom:8px}
+.about-contact p{color:var(--tx2);font-size:13px;margin-bottom:18px;line-height:1.7}
+.contact-email{
+  display:inline-flex;align-items:center;gap:7px;
+  color:var(--gold);font-size:14px;text-decoration:none;
+  border-bottom:1px solid var(--goldd);padding-bottom:2px;
+}
+</style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav id="nav">
+  <div class="nav-logo" onclick="showTab('home')">VERITAS<small>Professional Reputation</small></div>
+  <button class="nav-tab active" data-tab="home">Home</button>
+  <button class="nav-tab" data-tab="discover">Discover</button>
+  <button class="nav-tab" data-tab="rate">Rate a Colleague</button>
+  <button class="nav-tab" data-tab="how">How It Works</button>
+  <button class="nav-tab" data-tab="about">About Us</button>
+  <div class="nav-sep"></div>
+  <div class="nav-badge"><div class="badge-dot"></div>2,841 verified profiles</div>
+  <button class="btn-signin">Sign in</button>
+</nav>
+
+<!-- ── HOME ── -->
+<div id="screen-home" class="screen active">
+  <div class="hero">
+    <div class="hero-eyebrow">⬡ Beta — Mumbai & Bangalore</div>
+    <h1>Hire for <em>who they are</em>,<br>not what they studied</h1>
+    <p>Veritas is a professional reputation layer where your real skills — rated by people who've actually worked with you — become your most powerful career signal.</p>
+    <div class="hero-ctas">
+      <button class="btn-hero" onclick="showTab('discover')">Browse Talent →</button>
+      <button class="btn-hero-o" onclick="showTab('how')">How it works</button>
+    </div>
+    <div class="trust-line">
+      <div class="tl-item">⌗ Peer-verified ratings</div>
+      <div class="tl-sep"></div>
+      <div class="tl-item">⌗ AI anomaly detection</div>
+      <div class="tl-sep"></div>
+      <div class="tl-item">⌗ Anonymous by default</div>
+      <div class="tl-sep"></div>
+      <div class="tl-item">⌗ Not a social network</div>
+    </div>
+  </div>
+  <div style="max-width:860px;margin:0 auto 52px;display:grid;grid-template-columns:repeat(4,1fr);gap:12px;padding:0 28px">
+    <div class="how-stat"><div class="hs-n">2.8K</div><div class="hs-l">Verified Profiles</div></div>
+    <div class="how-stat"><div class="hs-n">18K</div><div class="hs-l">Ratings Submitted</div></div>
+    <div class="how-stat"><div class="hs-n">340</div><div class="hs-l">Companies Hiring</div></div>
+    <div class="how-stat"><div class="hs-n">94%</div><div class="hs-l">HR Satisfaction</div></div>
+  </div>
+  <!-- Waitlist -->
+  <div class="waitlist-section">
+    <h2>Get early access</h2>
+    <p>Join 1,200+ professionals already on the waitlist. Be among the first to claim your Veritas profile when we open to your city.</p>
+    <div class="waitlist-row">
+      <input class="waitlist-inp" type="email" id="wl-email" placeholder="your@email.com">
+      <button class="btn-p" onclick="joinWaitlist()">Join waitlist</button>
+    </div>
+    <div class="waitlist-count" id="wl-count"><strong>1,247</strong> professionals already waiting</div>
+  </div>
+</div>
+
+<!-- ── DISCOVER ── -->
+<div id="screen-discover" class="screen">
+  <div class="discover-top">
+    <h1>Discover talent</h1>
+    <p>Search verified professionals by Veritas Score, dimension strength, and industry.</p>
+  </div>
+  <div class="search-wrap">
+    <span class="search-ic">⌕</span>
+    <input type="text" id="search-input" placeholder="Search name, role, company, or skill..." oninput="filterProfiles()">
+  </div>
+  <div class="filter-row">
+    <button class="chip active" onclick="setFilter(this,'All','industry')">All</button>
+    <button class="chip" onclick="setFilter(this,'Tech','industry')">Tech</button>
+    <button class="chip" onclick="setFilter(this,'Finance','industry')">Finance</button>
+    <button class="chip" onclick="setFilter(this,'Marketing','industry')">Marketing</button>
+    <button class="chip" onclick="setFilter(this,'Design','industry')">Design</button>
+    <button class="chip" onclick="setFilter(this,'Operations','industry')">Operations</button>
+    <div class="fsep"></div>
+    <button class="chip active city-chip" onclick="setCityFilter(this,'All')">All Cities</button>
+    <button class="chip city-chip" onclick="setCityFilter(this,'Mumbai')">Mumbai</button>
+    <button class="chip city-chip" onclick="setCityFilter(this,'Bangalore')">Bangalore</button>
+    <div class="fsep"></div>
+    <select class="sort-sel" onchange="sortProfiles(this.value)">
+      <option value="score">Sort: Top Rated</option>
+      <option value="ratings">Sort: Most Reviews</option>
+      <option value="name">Sort: Name A–Z</option>
+    </select>
+  </div>
+  <div class="profiles-grid" id="profiles-grid"></div>
+</div>
+
+<!-- ── PROFILE ── -->
+<div id="screen-profile" class="screen">
+  <button class="btn-back" onclick="backToDiscover()">← Back to discover</button>
+  <div id="profile-content"></div>
+</div>
+
+<!-- ── RATE ── -->
+<div id="screen-rate" class="screen">
+  <div class="rate-wrap">
+    <div class="rate-hdr">
+      <h1>Rate a colleague</h1>
+      <p>Your honest assessment helps build a trustworthy professional reputation layer for everyone.</p>
+    </div>
+    <div class="step-ind" id="step-ind">
+      <div class="step-d cur" id="sd-0"></div><div class="step-ln"></div>
+      <div class="step-d" id="sd-1"></div><div class="step-ln"></div>
+      <div class="step-d" id="sd-2"></div><div class="step-ln"></div>
+      <div class="step-d" id="sd-3"></div>
+    </div>
+    <div id="rate-step-content"></div>
+  </div>
+</div>
+
+<!-- ── HOW IT WORKS ── -->
+<div id="screen-how" class="screen">
+  <div class="how-hdr">
+    <h1>How Veritas works</h1>
+    <p>A professional reputation system built on verified peer insight — not credentials or self-promotion.</p>
+  </div>
+  <div class="how-grid">
+    <div class="how-card">
+      <div class="how-n">01</div>
+      <h3>Build your profile</h3>
+      <p>Your Veritas profile is a living record of how people actually experience working with you. Not a resume — a reputation. It builds over time across every role and company.</p>
+    </div>
+    <div class="how-card">
+      <div class="how-n">02</div>
+      <h3>Get rated on what matters</h3>
+      <p>Managers, colleagues, HRs, and clients rate you across five professional dimensions after a real working relationship. One verified rating is worth more than a hundred endorsements.</p>
+      <div class="params">
+        <div class="param"><div class="pdot"></div>Interpersonal Skills</div>
+        <div class="param"><div class="pdot"></div>Analytical Thinking</div>
+        <div class="param"><div class="pdot"></div>Problem Solving</div>
+        <div class="param"><div class="pdot"></div>Creative Thinking</div>
+        <div class="param"><div class="pdot"></div>Work Ethics</div>
+      </div>
+    </div>
+    <div class="how-card">
+      <div class="how-n">03</div>
+      <h3>AI-verified, fraud-resistant</h3>
+      <p>Our model removes statistical outliers and detects coordinated inflation — users who consistently rate everyone the same way, or in suspicious clusters, are automatically weighted down.</p>
+      <div class="how-ai">
+        <div class="ai-label">Fraud detection signals</div>
+        <div class="ai-item"><span class="ai-ic">◆</span>Rater who grades all contacts identically</div>
+        <div class="ai-item"><span class="ai-ic">◆</span>Coordinated mutual high-rating rings</div>
+        <div class="ai-item"><span class="ai-ic">◆</span>Ratings with no verifiable relationship</div>
+        <div class="ai-item"><span class="ai-ic">◆</span>Unusual score velocity or burst patterns</div>
+      </div>
+    </div>
+    <div class="how-card">
+      <div class="how-n">04</div>
+      <h3>Discovered by top recruiters</h3>
+      <p>HR teams at leading companies subscribe to Veritas to search talent by dimension profile, not just job title. A high score in Problem Solving and Ethics beats a tier-1 college name.</p>
+    </div>
+  </div>
+  <div class="how-stat-row" style="max-width:860px">
+    <div class="how-stat"><div class="hs-n">5</div><div class="hs-l">Rating dimensions</div></div>
+    <div class="how-stat"><div class="hs-n">6.4</div><div class="hs-l">Avg ratings per profile</div></div>
+    <div class="how-stat"><div class="hs-n">0.94</div><div class="hs-l">Fraud detection precision</div></div>
+    <div class="how-stat"><div class="hs-n">72h</div><div class="hs-l">Avg time to first rating</div></div>
+  </div>
+  <!-- FAQ -->
+  <div class="faq-section">
+    <h2>Frequently asked questions</h2>
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q"><span class="faq-q-text">Is my identity visible when I rate someone?</span><span class="faq-arrow">▼</span></div>
+      <div class="faq-a">No. All ratings are anonymous by default. The person being rated will see their score and qualitative notes, but never the identity of who submitted them. Your profile will only log that you gave a rating, not to whom.</div>
+    </div>
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q"><span class="faq-q-text">How does Veritas prevent fake or inflated ratings?</span><span class="faq-arrow">▼</span></div>
+      <div class="faq-a">Our AI model tracks statistical patterns across all raters. It flags users who give identical scores to everyone, detects coordinated mutual high-rating rings, and cross-references relationship claims against professional history. Suspicious ratings are down-weighted before contributing to a score.</div>
+    </div>
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q"><span class="faq-q-text">Can I claim and manage my own profile?</span><span class="faq-arrow">▼</span></div>
+      <div class="faq-a">Yes. Once you verify your identity via work email or LinkedIn, you can claim your profile, set your availability status, add context about your career, and request removal of ratings you believe were submitted in bad faith. We review all disputes manually.</div>
+    </div>
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q"><span class="faq-q-text">How do recruiters access Veritas data?</span><span class="faq-arrow">▼</span></div>
+      <div class="faq-a">HR teams and hiring managers at subscribing companies can search profiles by Veritas Score range, dimension strength, industry, city, and availability. Individual rating breakdowns and testimonials are only visible to verified recruiters, not the general public.</div>
+    </div>
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q"><span class="faq-q-text">Which cities is Veritas currently available in?</span><span class="faq-arrow">▼</span></div>
+      <div class="faq-a">We are currently in private beta across Mumbai and Bangalore. Hyderabad, Delhi NCR, and Pune are next in the roadmap. Join the waitlist on our homepage to get notified when we expand to your city.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── ABOUT US ── -->
+<div id="screen-about" class="screen">
+  <div class="about-hero">
+    <h1>Built by people who<br>felt the gap firsthand</h1>
+    <p>Veritas was founded on a simple frustration — the most important thing about a professional, how they actually work, is also the hardest thing to know before hiring them. We're fixing that.</p>
+  </div>
+
+  <div class="about-mission">
+    <div class="am-label">Our Mission</div>
+    <div class="am-text">
+      "Make <em>character and capability</em> the most legible signal in professional life — not where you studied, not who you know, but how you actually show up at work every single day."
+    </div>
+  </div>
+
+  <div class="about-founders">
+    <div class="af-title">The founding team</div>
+    <div class="founders-grid">
+
+      <!-- ── JAINAM JAIN ── -->
+      <div class="founder-card">
+        <div class="fc-top">
+          <div class="fc-avatar-wrap">
+            <div class="fc-avatar fc-avatar-jj">
+              <!-- Geometric avatar for Jainam -->
+              <svg viewBox="0 0 88 88" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <linearGradient id="jj-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" style="stop-color:#1a1510"/>
+                    <stop offset="100%" style="stop-color:#2e2008"/>
+                  </linearGradient>
+                  <linearGradient id="jj-gold" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" style="stop-color:#c9a352"/>
+                    <stop offset="100%" style="stop-color:#8a6e2e"/>
+                  </linearGradient>
+                </defs>
+                <rect width="88" height="88" fill="url(#jj-bg)"/>
+                <!-- Subtle grid lines -->
+                <line x1="0" y1="44" x2="88" y2="44" stroke="#c9a352" stroke-width="0.3" stroke-opacity="0.2"/>
+                <line x1="44" y1="0" x2="44" y2="88" stroke="#c9a352" stroke-width="0.3" stroke-opacity="0.2"/>
+                <!-- Diamond accent -->
+                <polygon points="44,10 66,44 44,78 22,44" fill="none" stroke="url(#jj-gold)" stroke-width="0.8" stroke-opacity="0.35"/>
+                <polygon points="44,20 60,44 44,68 28,44" fill="none" stroke="url(#jj-gold)" stroke-width="0.5" stroke-opacity="0.2"/>
+                <!-- Initials -->
+                <text x="44" y="52" text-anchor="middle" font-family="Georgia,serif" font-size="22" font-weight="700" fill="url(#jj-gold)" letter-spacing="1">JJ</text>
+              </svg>
+            </div>
+            <div class="fc-founder-tag">Co-Founder</div>
+          </div>
+        </div>
+        <div class="fc-body">
+          <div class="fc-name">Jainam Jain</div>
+          <div class="fc-role">Co-Founder · Finance & Strategy</div>
+          <div class="fc-bio">
+            Jainam is an equity research professional with deep coverage experience across Capital Goods, Power, and Infrastructure. Joining DAM Capital Advisors as a Research Associate, he brings a rigorous, data-driven lens to everything he builds. He co-founded Veritas after realising that the most signal-rich information about a professional — how peers and managers actually experience working with them — was nowhere to be found when it mattered most. At Veritas, Jainam leads market strategy, product thinking for the finance vertical, and recruiter partnerships.
+          </div>
+          <div class="fc-pills">
+            <span class="fc-pill">Equity Research</span>
+            <span class="fc-pill">Capital Markets</span>
+            <span class="fc-pill">Mumbai</span>
+          </div>
+          <div class="fc-links">
+            <a class="fc-link" href="https://www.linkedin.com/in/jainam-jain2004" target="_blank">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+              LinkedIn
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── KEON MODI ── -->
+      <div class="founder-card">
+        <div class="fc-top">
+          <div class="fc-avatar-wrap">
+            <div class="fc-avatar fc-avatar-km">
+              <!-- Geometric avatar for Keon -->
+              <svg viewBox="0 0 88 88" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <linearGradient id="km-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" style="stop-color:#0d1520"/>
+                    <stop offset="100%" style="stop-color:#0f2035"/>
+                  </linearGradient>
+                  <linearGradient id="km-blue" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" style="stop-color:#6aa3d5"/>
+                    <stop offset="100%" style="stop-color:#3a6fa0"/>
+                  </linearGradient>
+                </defs>
+                <rect width="88" height="88" fill="url(#km-bg)"/>
+                <!-- Hex pattern -->
+                <polygon points="44,8 62,18 62,38 44,48 26,38 26,18" fill="none" stroke="url(#km-blue)" stroke-width="0.8" stroke-opacity="0.35"/>
+                <polygon points="44,18 56,25 56,39 44,46 32,39 32,25" fill="none" stroke="url(#km-blue)" stroke-width="0.5" stroke-opacity="0.2"/>
+                <!-- Dots -->
+                <circle cx="44" cy="8" r="2" fill="#4a7fc1" fill-opacity="0.5"/>
+                <circle cx="62" cy="18" r="2" fill="#4a7fc1" fill-opacity="0.5"/>
+                <circle cx="62" cy="38" r="2" fill="#4a7fc1" fill-opacity="0.5"/>
+                <!-- Initials -->
+                <text x="44" y="70" text-anchor="middle" font-family="Georgia,serif" font-size="22" font-weight="700" fill="url(#km-blue)" letter-spacing="1">KM</text>
+              </svg>
+            </div>
+            <div class="fc-founder-tag" style="background:var(--blubg);border-color:var(--blu);color:var(--blu)">Co-Founder</div>
+          </div>
+        </div>
+        <div class="fc-body">
+          <div class="fc-name">Keon Modi</div>
+          <div class="fc-role">Co-Founder · Product & Technology</div>
+          <div class="fc-bio">
+            Keon is a product and technology builder with a focus on trust systems and data integrity. He leads platform architecture, the AI fraud-detection layer, and the full product experience at Veritas. Keon believes the most underrated problem in hiring is signal quality — and that fixing it requires building something people trust deeply, not just another directory. He is obsessed with designing systems where incentives align honesty over gaming.
+          </div>
+          <div class="fc-pills">
+            <span class="fc-pill" style="border-color:rgba(74,127,193,.3);color:#5a8fb8">Product</span>
+            <span class="fc-pill" style="border-color:rgba(74,127,193,.3);color:#5a8fb8">AI Systems</span>
+            <span class="fc-pill" style="border-color:rgba(74,127,193,.3);color:#5a8fb8">Mumbai</span>
+          </div>
+          <div class="fc-links">
+            <a class="fc-link" href="https://www.linkedin.com/in/keon-modi-130999314" target="_blank">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+              LinkedIn
+            </a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Values -->
+  <div class="about-values">
+    <div class="av-title">What we believe</div>
+    <div class="values-grid">
+      <div class="value-card">
+        <div class="vc-icon">◈</div>
+        <div class="vc-title">Truth over polish</div>
+        <div class="vc-text">A resume is optimised to impress. We build for accuracy. One honest rating from someone who worked with you is worth more than a hundred self-declared skills.</div>
+      </div>
+      <div class="value-card">
+        <div class="vc-icon">⬡</div>
+        <div class="vc-title">Anonymity as infrastructure</div>
+        <div class="vc-text">Honest feedback only exists when there are no professional consequences for giving it. Anonymity isn't a feature — it's the foundation the entire system rests on.</div>
+      </div>
+      <div class="value-card">
+        <div class="vc-icon">◆</div>
+        <div class="vc-title">Trust through friction</div>
+        <div class="vc-text">We deliberately make gaming the system difficult. Ratings take effort. Relationships require verification. The friction is the point — it filters noise from signal.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contact -->
+  <div class="about-contact">
+    <h2>Work with us or reach out</h2>
+    <p>We're always open to conversations with recruiters, investors, and professionals who want to help build the future of professional trust.</p>
+    <a class="contact-email" href="mailto:hello@veritas.work">hello@veritas.work →</a>
+  </div>
+</div>
+
+<!-- ── SHARE TOAST ── -->
+<div class="share-toast" id="share-toast">✓ Profile link copied to clipboard</div>
+
+<script>
+// ── DATA ──
+const PROFILES = [
+  {
+    id:1, initials:'PV', name:'Priya Venkataraman', role:'Head of Growth', company:'ZestMoney',
+    score:8.4, ratings:12, industry:'Finance',
+    tags:['FinTech','B2B Growth','CRM'],
+    dims:{ip:9.1,an:8.7,ps:8.2,ct:7.9,we:9.1},
+    exp:'5 yrs', city:'Mumbai', available:true,
+    trend:[7.8,8.0,8.1,8.2,8.3,8.4],
+    testy:[
+      {text:"Priya has an exceptional ability to break down complex user acquisition problems into clear, actionable frameworks. The referral programme she built drove a 3× improvement in CAC within two quarters.",meta:"Manager · Growth Lead · 2023"},
+      {text:"One of the most reliable teammates I've worked with — sets a high standard for thoroughness and consistently over-delivers without creating noise.",meta:"Colleague · Product Team · 2022"},
+      {text:"Her cross-functional communication is genuinely impressive. Every stakeholder alignment she led ended with clarity rather than confusion.",meta:"HR · Verified · 2023"}
+    ]
+  },
+  {
+    id:2, initials:'AM', name:'Arjun Mehta', role:'Senior Product Manager', company:'Razorpay',
+    score:7.8, ratings:9, industry:'Tech',
+    tags:['Payments','API Products','B2B'],
+    dims:{ip:7.5,an:8.9,ps:8.0,ct:7.2,we:7.8},
+    exp:'4 yrs', city:'Bangalore', available:false,
+    trend:[7.2,7.4,7.5,7.6,7.7,7.8]
+  },
+  {
+    id:3, initials:'KN', name:'Kavya Nair', role:'UX Design Lead', company:'Swiggy',
+    score:9.1, ratings:17, industry:'Design',
+    tags:['Consumer UX','Mobile','Design Systems'],
+    dims:{ip:9.5,an:8.2,ps:9.0,ct:9.8,we:9.1},
+    exp:'6 yrs', city:'Bangalore', available:true,
+    trend:[8.4,8.5,8.7,8.8,9.0,9.1]
+  },
+  {
+    id:4, initials:'RS', name:'Rohit Sharma', role:'Senior Data Scientist', company:'CRED',
+    score:8.0, ratings:7, industry:'Tech',
+    tags:['Machine Learning','FinTech','Analytics'],
+    dims:{ip:7.0,an:9.5,ps:9.0,ct:7.8,we:7.2},
+    exp:'4 yrs', city:'Bangalore', available:true,
+    trend:[7.6,7.7,7.8,7.9,7.9,8.0]
+  },
+  {
+    id:5, initials:'SI', name:'Sneha Iyer', role:'Content Strategy Lead', company:'Zepto',
+    score:7.5, ratings:11, industry:'Marketing',
+    tags:['Content','D2C','Brand Voice'],
+    dims:{ip:8.4,an:7.0,ps:6.9,ct:9.2,we:8.1},
+    exp:'5 yrs', city:'Mumbai', available:false,
+    trend:[7.0,7.1,7.2,7.3,7.4,7.5]
+  },
+  {
+    id:6, initials:'VB', name:'Vikram Bose', role:'Engineering Manager', company:'PhonePe',
+    score:8.7, ratings:14, industry:'Tech',
+    tags:['Backend','Payments','Team Leadership'],
+    dims:{ip:8.9,an:9.0,ps:8.8,ct:7.9,we:9.1},
+    exp:'7 yrs', city:'Bangalore', available:false,
+    trend:[8.0,8.2,8.3,8.5,8.6,8.7]
+  },
+  {
+    id:7, initials:'DR', name:'Divya Ramachandran', role:'Finance Analyst', company:'Dezerv',
+    score:8.2, ratings:8, industry:'Finance',
+    tags:['WealthTech','Equity Research','Modelling'],
+    dims:{ip:7.8,an:9.3,ps:8.5,ct:7.1,we:9.0},
+    exp:'3 yrs', city:'Mumbai', available:true,
+    trend:[7.5,7.7,7.8,7.9,8.0,8.2]
+  },
+  {
+    id:8, initials:'KP', name:'Karan Parekh', role:'Performance Marketing Lead', company:'Groww',
+    score:7.9, ratings:10, industry:'Marketing',
+    tags:['Paid Media','FinTech','Growth'],
+    dims:{ip:8.1,an:8.0,ps:7.8,ct:8.5,we:7.4},
+    exp:'4 yrs', city:'Bangalore', available:true,
+    trend:[7.3,7.5,7.6,7.7,7.8,7.9]
+  }
+];
+
+const INDUSTRY_AVG = {ip:7.4,an:7.6,ps:7.3,ct:7.5,we:7.8};
+const DIM_MAP = {ip:'Interpersonal',an:'Analytical',ps:'Problem Solving',ct:'Creative',we:'Work Ethics'};
+const DIM_DESC = {ip:'Communication, empathy & collaboration',an:'Data-driven reasoning & depth of insight',ps:'Clarity in ambiguous, high-stakes situations',ct:'Original thinking & lateral reasoning',we:'Reliability, ownership & professional standards'};
+const RATERS = [['Managers',3,'8.9'],['Colleagues',6,'8.1'],['HR / Verified',2,'8.7'],['Clients',1,'9.2']];
+
+let currentFilter = 'All';
+let currentCityFilter = 'All';
+let currentSort = 'score';
+let rateStep = 0;
+let rateData = {name:'',rel:null,ratings:{},comment:''};
+
+// ── TAB NAVIGATION ──
+const TAB_MAP = {
+  'Home':'home','Discover':'discover','Rate a Colleague':'rate',
+  'How It Works':'how','About Us':'about'
+};
+const TAB_MAP_REV = {
+  home:'Home',discover:'Discover',rate:'Rate a Colleague',
+  how:'How It Works',about:'About Us'
+};
+
+function showTab(id) {
+  document.querySelectorAll('.screen').forEach(s=>{s.classList.remove('active');s.style.display=''});
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('screen-'+id).classList.add('active');
+  document.querySelectorAll('.nav-tab').forEach(t=>{
+    if(t.textContent.trim()===TAB_MAP_REV[id]) t.classList.add('active');
+  });
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(id==='discover') renderGrid();
+  if(id==='rate'){rateStep=0;rateData={name:'',rel:null,ratings:{},comment:''};renderRateStep();}
+}
+
+document.querySelectorAll('.nav-tab').forEach(t=>{
+  t.addEventListener('click',()=>{ const id=TAB_MAP[t.textContent.trim()]; if(id) showTab(id); });
+});
+
+// ── WAITLIST ──
+let wlCount = 1247;
+function joinWaitlist() {
+  const v = document.getElementById('wl-email').value.trim();
+  if(!v || !v.includes('@')) return;
+  wlCount++;
+  document.getElementById('wl-count').innerHTML = `<strong>${wlCount.toLocaleString()}</strong> professionals already waiting`;
+  document.getElementById('wl-email').value = '';
+  document.getElementById('wl-email').placeholder = '✓ You\'re on the list!';
+  setTimeout(()=>{ document.getElementById('wl-email').placeholder = 'your@email.com'; },4000);
+}
+
+// ── PROFILE CARDS ──
+function renderCard(p) {
+  const dimKeys = Object.keys(p.dims);
+  const bars = dimKeys.map(k=>`
+    <div class="cbar-row">
+      <div class="cbar-lbl">${DIM_MAP[k].split(' ')[0]}</div>
+      <div class="cbar-track"><div class="cbar-fill" style="width:${p.dims[k]*10}%"></div></div>
+    </div>`).join('');
+  const tags = p.tags.map(t=>`<span class="ctag">${t}</span>`).join('');
+  return `
+    <div class="p-card" onclick="showProfile(${p.id})">
+      <div class="ch">
+        <div class="avi">${p.initials}<div class="avail-dot ${p.available?'open':'closed'}"></div></div>
+        <div class="ci">
+          <div class="cn">${p.name}</div>
+          <div class="cr">${p.role}</div>
+          <div class="cc">${p.company} · ${p.city}</div>
+        </div>
+        <div class="cs">${p.score.toFixed(1)}<small>/ 10</small></div>
+      </div>
+      <div class="ctags">${tags}</div>
+      <div class="cbars">${bars}</div>
+      <div class="cf">
+        <div class="cf-ct"><strong>${p.ratings}</strong> ratings</div>
+        <button class="btn-view">View →</button>
+      </div>
+    </div>`;
+}
+
+function renderGrid() {
+  const q = document.getElementById('search-input').value.toLowerCase();
+  let list = [...PROFILES];
+  if(currentFilter !== 'All') list = list.filter(p=>p.industry===currentFilter);
+  if(currentCityFilter !== 'All') list = list.filter(p=>p.city===currentCityFilter);
+  if(q) list = list.filter(p=>`${p.name} ${p.role} ${p.company} ${p.tags.join(' ')} ${p.city}`.toLowerCase().includes(q));
+  if(currentSort==='score') list.sort((a,b)=>b.score-a.score);
+  if(currentSort==='ratings') list.sort((a,b)=>b.ratings-a.ratings);
+  if(currentSort==='name') list.sort((a,b)=>a.name.localeCompare(b.name));
+  const grid = document.getElementById('profiles-grid');
+  if(list.length===0) {
+    grid.innerHTML = `<div class="no-results" style="grid-column:1/-1"><span>⌕</span>No profiles match your filters.<br>Try a different search or clear the filters.</div>`;
+  } else {
+    grid.innerHTML = list.map(renderCard).join('');
+  }
+}
+
+function filterProfiles(){renderGrid()}
+function setFilter(el,val,type){
+  document.querySelectorAll('.chip:not(.city-chip)').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active'); currentFilter=val; renderGrid();
+}
+function setCityFilter(el,val){
+  document.querySelectorAll('.city-chip').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active'); currentCityFilter=val; renderGrid();
+}
+function sortProfiles(val){currentSort=val;renderGrid();}
+
+// ── SPARKLINE SVG ──
+function buildSparkline(trend) {
+  const w=140,h=28,pad=2;
+  const min=Math.min(...trend)-0.2, max=Math.max(...trend)+0.2;
+  const pts = trend.map((v,i)=>{
+    const x = pad + (i/(trend.length-1))*(w-pad*2);
+    const y = h-pad - ((v-min)/(max-min))*(h-pad*2);
+    return `${x},${y}`;
+  }).join(' ');
+  const last = pts.split(' ').pop().split(',');
+  return `<svg class="sparkline" viewBox="0 0 ${w} ${h}" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <polyline points="${pts}" stroke="#c9a352" stroke-width="1.5" fill="none" stroke-linejoin="round" stroke-linecap="round"/>
+    <circle cx="${last[0]}" cy="${last[1]}" r="3" fill="#c9a352"/>
+  </svg>`;
+}
+
+// ── PROFILE VIEW ──
+function showProfile(id) {
+  const p = PROFILES.find(x=>x.id===id);
+  if(!p) return;
+  const dims = Object.entries(p.dims).map(([k,v])=>{
+    const avg = INDUSTRY_AVG[k];
+    return `
+    <div class="dim-row">
+      <div class="dim-lbl" title="${DIM_DESC[k]}">${DIM_MAP[k]}</div>
+      <div class="dim-track">
+        <div class="dim-fill" style="width:${v*10}%"></div>
+        <div class="dim-avg-marker" style="left:${avg*10}%" title="Industry avg: ${avg}"></div>
+      </div>
+      <div class="dim-sc">${v.toFixed(1)}</div>
+    </div>`;
+  }).join('');
+  const raterCards = RATERS.map(([t,n,a])=>`
+    <div class="rater-c">
+      <div class="rc-type">${t}</div>
+      <div class="rc-n">${n}</div>
+      <div class="rc-avg">avg ${a}</div>
+    </div>`).join('');
+  const testy = (p.testy||[]).map(t=>`
+    <div class="testy-item">
+      <div class="tq">"</div>
+      <div>
+        <div class="ttext">${t.text}</div>
+        <div class="tmeta">${t.meta}</div>
+      </div>
+    </div>`).join('');
+  const tags = [...p.tags,`${p.exp} exp`].map(t=>`<span class="ph-tag">${t}</span>`).join('');
+  const badgeScore = p.score >= 8.5 ? 'Top 15%' : p.score >= 8.0 ? 'Top 30%' : 'Above Average';
+  const availHtml = `<span class="avail-badge ${p.available?'open':'closed'}"><span class="avail-badge-dot"></span>${p.available?'Open to opportunities':'Not looking right now'}</span>`;
+
+  document.getElementById('profile-content').innerHTML = `
+    <div class="ph">
+      <div>
+        <div class="ph-av">${p.initials}</div>
+        <div class="ph-name">${p.name}</div>
+        <div class="ph-meta">
+          <div class="ph-meta-item"><strong>${p.role}</strong></div>
+          <div class="ph-dot"></div>
+          <div class="ph-meta-item">${p.company}</div>
+          <div class="ph-dot"></div>
+          <div class="ph-meta-item">${p.city}</div>
+          <div class="ph-dot"></div>
+          <div class="ph-meta-item">${p.ratings} ratings</div>
+        </div>
+        <div class="ph-tags" style="margin-bottom:10px">${tags}</div>
+        ${availHtml}
+      </div>
+      <div class="score-card">
+        <div class="sc-lbl">Veritas Score</div>
+        <div><span class="sc-big">${p.score.toFixed(1)}</span><span class="sc-denom"> /10</span></div>
+        <div class="sc-sub">Median of ${p.ratings} verified ratings</div>
+        <div class="sc-badge">${badgeScore} in ${p.tags[0]}</div>
+        ${p.trend ? `<div class="sc-trend"><div class="sc-trend-lbl">6-month trend</div>${buildSparkline(p.trend)}</div>` : ''}
+      </div>
+    </div>
+    <div class="sec-title">Rating breakdown <span style="font-size:8px;color:var(--tx3);text-transform:none;letter-spacing:0;margin-left:6px">— grey marker = industry average</span></div>
+    <div class="dims">${dims}</div>
+    <div class="sec-title">Rater breakdown</div>
+    <div class="rater-grid">${raterCards}</div>
+    ${testy ? `<div class="sec-title">What raters said</div><div class="testy">${testy}</div>` : ''}
+    <div class="profile-actions">
+      <button class="btn-rate-cta" onclick="startRateFor('${p.name}')">+ Rate ${p.name.split(' ')[0]}</button>
+      <button class="btn-share" onclick="shareProfile('${p.name}')">⎘ Share profile</button>
+    </div>
+  `;
+
+  document.querySelectorAll('.screen').forEach(s=>{s.classList.remove('active');s.style.display='none'});
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+  const ps = document.getElementById('screen-profile');
+  ps.style.display='block';
+  ps.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function backToDiscover() {
+  document.getElementById('screen-profile').classList.remove('active');
+  document.getElementById('screen-profile').style.display='none';
+  showTab('discover');
+}
+
+function shareProfile(name) {
+  navigator.clipboard.writeText(window.location.href + '#' + name.replace(' ','-').toLowerCase()).catch(()=>{});
+  const t = document.getElementById('share-toast');
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 2800);
+}
+
+// ── RATE FORM ──
+const DIMS_RATE = ['Interpersonal Skills','Analytical Thinking','Problem Solving','Creative Thinking','Work Ethics'];
+const DIMS_DESC_RATE = [
+  'How well do they communicate, collaborate, and handle conflict?',
+  'How deeply do they think through problems and use data?',
+  'How effective are they when situations are ambiguous or high-stakes?',
+  'How often do they bring new angles, ideas, or fresh thinking?',
+  'How reliable, accountable, and professionally consistent are they?'
+];
+const REL_TYPES = [{ic:'👔',lbl:'Was my manager'},{ic:'🤝',lbl:'Was my colleague'},{ic:'📋',lbl:'I managed them'},{ic:'🔍',lbl:'I was their HR'}];
+
+function startRateFor(name) {
+  rateData.name = name;
+  rateStep = 1;
+  showTab('rate');
+}
+
+function updateStepIndicator() {
+  for(let i=0;i<4;i++){
+    const el = document.getElementById('sd-'+i);
+    if(!el) continue;
+    el.className = 'step-d';
+    if(i < rateStep) el.classList.add('done');
+    else if(i === rateStep) el.classList.add('cur');
+  }
+}
+
+function renderRateStep() {
+  updateStepIndicator();
+  const c = document.getElementById('rate-step-content');
+  if(rateStep===0) {
+    c.innerHTML = `
+      <div class="form-card">
+        <label class="flbl">Who are you rating?</label>
+        <input class="finp" id="rate-name" type="text" placeholder="Enter name or email..." value="${rateData.name}" oninput="rateData.name=this.value">
+        <div class="suggest-box">
+          <div class="sug-head">Suggested from your network</div>
+          <div class="sug-item" onclick="pickSug('Rohan Desai')"><div class="sug-dot"></div>Rohan Desai <span style="color:var(--tx3);font-size:10px">· Colleague at Razorpay</span></div>
+          <div class="sug-item" onclick="pickSug('Meera Pillai')"><div class="sug-dot"></div>Meera Pillai <span style="color:var(--tx3);font-size:10px">· Ex-Manager at CRED</span></div>
+          <div class="sug-item" onclick="pickSug('Aditya Singh')"><div class="sug-dot"></div>Aditya Singh <span style="color:var(--tx3);font-size:10px">· HR at Groww</span></div>
+        </div>
+        <div class="factions">
+          <span></span>
+          <button class="btn-p" id="rate-next-0" onclick="if(rateData.name){rateStep=1;renderRateStep()}" ${!rateData.name?'disabled':''}>Continue →</button>
+        </div>
+      </div>`;
+    document.getElementById('rate-name').addEventListener('input',e=>{
+      document.getElementById('rate-next-0').disabled = !e.target.value.trim();
+    });
+  } else if(rateStep===1) {
+    const opts = REL_TYPES.map(r=>`<div class="rel-opt${rateData.rel===r.lbl?' sel':''}" onclick="rateData.rel='${r.lbl}';renderRateStep()"><div class="rel-ic">${r.ic}</div><div class="rel-lbl">${r.lbl}</div></div>`).join('');
+    c.innerHTML = `
+      <div class="form-card">
+        <label class="flbl">How did you work with ${rateData.name}?</label>
+        <div class="rel-grid">${opts}</div>
+        <div class="factions">
+          <button class="btn-s" onclick="rateStep=0;renderRateStep()">← Back</button>
+          <button class="btn-p" onclick="if(rateData.rel){rateStep=2;renderRateStep()}" ${!rateData.rel?'disabled':''}>Continue →</button>
+        </div>
+      </div>`;
+  } else if(rateStep===2) {
+    const dimRows = DIMS_RATE.map((d,i)=>{
+      const v = rateData.ratings[d]||0;
+      const stars = [1,2,3,4,5].map(n=>`<div class="star${v>=n?' sel':''}" onclick="rateData.ratings['${d}']=${n};renderRateStep()">${n}</div>`).join('');
+      return `<div class="rdim-row">
+        <div class="rdim-top"><div class="rdim-lbl">${d}</div>${v?`<div class="rdim-sc">${v} / 5</div>`:''}</div>
+        <div class="rdim-desc">${DIMS_DESC_RATE[i]}</div>
+        <div class="stars">${stars}</div>
+      </div>`;
+    }).join('');
+    const allDone = DIMS_RATE.every(d=>rateData.ratings[d]);
+    c.innerHTML = `
+      <div class="form-card">
+        <label class="flbl">Rate ${rateData.name} on each dimension</label>
+        <div class="rdims">${dimRows}</div>
+        <div class="factions">
+          <button class="btn-s" onclick="rateStep=1;renderRateStep()">← Back</button>
+          <button class="btn-p" onclick="if(${allDone}){rateStep=3;renderRateStep()}" ${!allDone?'disabled':''}>Continue →</button>
+        </div>
+      </div>`;
+  } else if(rateStep===3) {
+    const len = rateData.comment.length;
+    c.innerHTML = `
+      <div class="form-card">
+        <label class="flbl">Add a brief note (optional)</label>
+        <textarea class="ftarea" id="rate-comment" maxlength="400" placeholder="Share a specific observation about working with this person — a project, a quality, a moment that stands out..." oninput="rateData.comment=this.value;document.getElementById('cc').textContent=this.value.length+'/400'">${rateData.comment}</textarea>
+        <div class="char-count" id="cc">${len}/400</div>
+        <div class="disclaimer">
+          <div class="disc-item"><span class="disc-ic">◆</span>Your identity will remain hidden from the ratee</div>
+          <div class="disc-item"><span class="disc-ic">◆</span>AI will flag unusual or inconsistent rating patterns</div>
+          <div class="disc-item"><span class="disc-ic">◆</span>Your own Veritas profile will log that you gave a rating</div>
+        </div>
+        <div class="factions">
+          <button class="btn-s" onclick="rateStep=2;renderRateStep()">← Back</button>
+          <button class="btn-p" onclick="submitRating()">Submit Rating</button>
+        </div>
+      </div>`;
+  } else if(rateStep===4) {
+    c.innerHTML = `
+      <div class="success-scr">
+        <div class="succ-ic">✓</div>
+        <h2>Rating submitted</h2>
+        <p>Your rating for <strong>${rateData.name}</strong> has been recorded and is pending AI verification. It will contribute to their Veritas Score once confirmed.</p>
+        <button class="btn-p" onclick="rateData={name:'',rel:null,ratings:{},comment:''};rateStep=0;renderRateStep()">Rate someone else</button>
+      </div>`;
+  }
+}
+
+function pickSug(name) {
+  rateData.name = name;
+  const inp = document.getElementById('rate-name');
+  if(inp) inp.value = name;
+  const btn = document.getElementById('rate-next-0');
+  if(btn) btn.disabled = false;
+}
+
+function submitRating() { rateStep=4; renderRateStep(); }
+
+// ── FAQ ──
+function toggleFaq(el) {
+  const isOpen = el.classList.contains('open');
+  document.querySelectorAll('.faq-item').forEach(f=>f.classList.remove('open'));
+  if(!isOpen) el.classList.add('open');
+}
+
+// ── INIT ──
+renderGrid();
+renderRateStep();
+</script>
+</body>
+</html>
